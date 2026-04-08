@@ -1,0 +1,59 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js
+        run: npm run build
+        env:
+          NEXT_PUBLIC_DOMAIN: ${{ vars.CF_PROJECT_DOMAIN || 'pending' }}
+          NEXT_PUBLIC_WHATSAPP_NUMBER: +15205850085
+          NEXT_PUBLIC_INSTAGRAM: ypmultiservicesusa
+          NEXT_PUBLIC_EMAIL: yperezservices@yahoo.com
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: yp-multiservices
+          directory: .next
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment PR with deployment URL
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const url = `https://yp-multiservices.pages.dev`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🚀 Deployment preview: ${url}`
+            })
