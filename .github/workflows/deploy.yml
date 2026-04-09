@@ -36,13 +36,21 @@ jobs:
           NEXT_PUBLIC_INSTAGRAM: ypmultiservicesusa
           NEXT_PUBLIC_EMAIL: yperezservices@yahoo.com
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: output
+          path: out
+          retention-days: 1
+          if-no-files-found: error
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: yp-multiservices
-          directory: .next
+          directory: out
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Comment PR with deployment URL
