@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
 import { Dictionary } from '@/shared/lib/dictionary'
 
 interface NavbarProps {
@@ -132,62 +131,55 @@ export default function Navbar({ dict, lang }: NavbarProps) {
       </div>
 
       {/* Mobile Menu */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t border-gray-100"
-          >
-            <div className="px-4 py-4 space-y-3">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`block py-2 text-base font-medium ${
-                    pathname === item.href
-                      ? 'text-primary-500'
-                      : 'text-gray-700'
-                  }`}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <div className="flex items-center space-x-4 pt-2">
-                <Link
-                  href={`/${otherLang}`}
-                  className="flex items-center space-x-1 px-4 py-2 rounded-full bg-primary-500 text-white text-sm font-medium"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
-                    />
-                  </svg>
-                  <span>{otherLangLabel}</span>
-                </Link>
-              </div>
+      {isOpen && (
+        <div className="md:hidden bg-white border-t border-gray-100">
+          <div className="px-4 py-4 space-y-3">
+            {navItems.map((item) => (
               <Link
-                href={`/${lang}/contact`}
-                className="block w-full text-center px-5 py-3 bg-accent-500 text-white rounded-full font-medium"
+                key={item.href}
+                href={item.href}
+                className={`block py-2 text-base font-medium ${
+                  pathname === item.href
+                    ? 'text-primary-500'
+                    : 'text-gray-700'
+                }`}
                 onClick={() => setIsOpen(false)}
               >
-                {dict.nav.callNow}
+                {item.label}
+              </Link>
+            ))}
+            <div className="flex items-center space-x-4 pt-2">
+              <Link
+                href={`/${otherLang}`}
+                className="flex items-center space-x-1 px-4 py-2 rounded-full bg-primary-500 text-white text-sm font-medium"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
+                  />
+                </svg>
+                <span>{otherLangLabel}</span>
               </Link>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <Link
+              href={`/${lang}/contact`}
+              className="block w-full text-center px-5 py-3 bg-accent-500 text-white rounded-full font-medium"
+              onClick={() => setIsOpen(false)}
+            >
+              {dict.nav.callClose}
+            </Link>
+          </div>
+        </div>
+      )}
     </nav>
   )
 }

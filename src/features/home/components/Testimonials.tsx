@@ -1,77 +1,34 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { motion } from 'framer-motion'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Dictionary } from '@/shared/lib/dictionary'
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger)
-}
 
 interface TestimonialsProps {
   dict: Dictionary
 }
 
 export default function Testimonials({ dict }: TestimonialsProps) {
-  const sectionRef = useRef<HTMLDivElement>(null)
-
   const testimonials = [
     dict.testimonials.testimonial1,
     dict.testimonials.testimonial2,
     dict.testimonials.testimonial3,
   ]
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.testimonial-card', {
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 80%',
-          toggleActions: 'play none none reverse',
-        },
-      })
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
   return (
-    <section
-      ref={sectionRef}
-      className="py-20 bg-white"
-    >
+    <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             {dict.testimonials.title}
           </h2>
-        </motion.div>
+        </div>
 
         {/* Testimonials Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <motion.div
+            <div
               key={index}
-              className="testimonial-card bg-gray-50 rounded-2xl p-8 shadow-lg border border-gray-100"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.15, duration: 0.5 }}
-              whileHover={{ scale: 1.02 }}
+              className="bg-gray-50 rounded-2xl p-8 shadow-lg border border-gray-100"
             >
               {/* Stars */}
               <div className="flex items-center mb-4">
@@ -100,7 +57,7 @@ export default function Testimonials({ dict }: TestimonialsProps) {
                   <p className="text-sm text-gray-500">{testimonial.location}</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
